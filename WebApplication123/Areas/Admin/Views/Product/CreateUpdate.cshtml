@@ -1,0 +1,118 @@
+﻿@model WebApplication123.ViewModel.ProductVM
+@{
+	ViewData["Title"] = "Create";
+	
+}
+
+
+<form method="post" asp-action="CreateUpdate">
+
+	<input type="hidden" asp-for="Product.Id" />
+	<input type="hidden" asp-for="Product.ImageUrl"/>
+
+	<div class="border p-3 mt-4">
+		<div class="row pb-3">
+			<h2 class="text-primary"> @((Model.Product==null || Model.Product.Id==0)?"Create" :"Update") Product </h2>
+			<hr />
+		</div>
+		<div asp-validation-summary=All></div>
+		@* <div class="row mb-3"> *@
+		@* 	<label asp-for="Product.Id"></label> *@
+		@* 	<input asp-for="Product.Id" class="form-control" /> *@
+		@* 	<span asp-validation-for="Product.Id" class="text-danger"></span> *@
+
+		@* </div> *@
+		<div class="row mb-3">
+			<label asp-for="Product.Name"></label>
+			<input asp-for="Product.Name" class="form-control" />
+			<span asp-validation-for="Product.Name" class="text-danger"></span>
+
+		</div>
+		<div class="row mb-3">
+			<label asp-for="Product.Description"></label>
+			<input asp-for="Product.Description" class="form-control"/>
+			<span asp-validation-for="Product.Description" class="text-danger"></span>
+
+		</div>
+		<div class="row mb-3">
+			<label asp-for="Product.Price"></label>
+			<input asp-for="Product.Price" class="form-control" />
+			<span asp-validation-for="Product.Price" class="text-danger"></span>
+			@Html.ValidationMessageFor(model => model.Product.Name, "", new { @class = "text-danger" })
+
+		</div>
+		<div class="row mb-3"> 
+		 	<label asp-for="Product.ImageUrl"></label> 
+			<input type="file" id="ImageFile" name="file"  class="form-control" /> 
+			<span class="text-danger">Image is required</span>
+			@* <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>  *@
+
+		  </div>
+
+		<div class="row mb-3">
+			<label for="CategoryId">Category</label>
+			<select asp-for="Product.CategoryId" class="form-select" asp-items="@Model.Categories">
+				<option value="">-- Select Category --</option>
+				
+			</select>
+			<span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+		</div>
+
+		@if(Model.Product==null || Model.Product.Id==0)
+		{
+			<button class="btn btn-primary" onclick="return ValidateEmpty()" type="submit"> Create </button>
+		}
+		else
+		{
+			<button class="btn btn-primary" type="submit"> Update </button>
+		}
+		
+	</div>
+	<a asp-action="Index" asp-controller="product"> Back To List </a>
+
+</form>
+
+@* @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey("Name")) *@
+@* { *@
+@* 	<div class="alert alert-danger"> *@
+@* 		@ViewData.ModelState["Name"]?.Errors.FirstOrDefault()?.ErrorMessage *@
+@* 	</div> *@
+@* } *@
+
+
+@section scripts {
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+
+	<script>
+
+		tinymce.init({
+			selector:'textarea',
+			plugins:'a11ychecker advcode casechange export formatpointer linkchecker autolink lists checklist media  mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker ',
+			toolbar: ' a11ycheck addcomment showcomments casechange checklist code export formatpainter pageembed permanentpen table ',
+			toolbar_mode: 'floating',
+			tinycomments_mode: 'embedded',
+			tinycomments_author: 'Author name',
+		});
+
+
+		function ValidateEmpty()
+		{
+			if(document.getElementById("ImageFile").value=="")
+			{
+				Swal.fire
+				({
+					icon:'error',
+					title:'Oops...',
+					text:'Upload Image'
+				});
+				return false;
+			}
+			return true;
+		}
+	</script>
+}
+
+
+
